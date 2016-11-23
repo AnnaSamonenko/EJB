@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <h:outputStylesheet library="css" name="bootstrap.min.css"></h:outputStylesheet>
+    <title>Companies</title>
+</h:head>
+<h:body>
+    <div class="container">
+        <div class="navbar navbar-inverse">
+            <div class="navbar-brand">
+                Companies
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h:dataTable id="companyTable" class="table table-bordered table-striped"
+                             value="#{companyBean.findAllCompanies()}" var="i" border="1">
+                    <h:column>
+                        <f:facet name="header"> id </f:facet>
+                        #{i.id}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header"> Name of company </f:facet>
+                        #{i.companyName}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header"> Location </f:facet>
+                        #{i.companyLocation}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header"> Company foundation year </f:facet>
+                        #{i.companyFoundationYear}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">
+                            Amount of shares
+                        </f:facet>
+                        #{i.shares.size()}
+                    </h:column>
+                </h:dataTable>
+                <hr/>
+
+                <!-- Add company-->
+                <h:form id="addCompany" styleClass="form-horizontal">
+
+                    <div class="form-group">
+                        <h:outputLabel value="Company Name" styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:inputText id="companyName" styleClass="form-control" value="#{company.companyName}"
+                                         required="true"
+                                         requiredMessage="Company name can't be empty"/>
+                            <h:messages id="m1" for="companyName" style="color:red"/>
+                            <p></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel value="Company Location" styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:inputText id="companyLocation" styleClass="form-control"
+                                         value="#{company.companyLocation}" required="true"
+                                         requiredMessage="Company location can't be empty"/>
+                            <h:messages id="m2" for="companyLocation" style="color:red"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel value="Company foundation year" styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:inputText onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+                                         id="companyFY" styleClass="form-control"
+                                         value="#{company.companyFoundationYear}"
+                                         required="true" requiredMessage="Company foundation year can't be empty"/>
+                            <h:messages id="m3" for="companyFY" style="color:red"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <h:commandButton value="Add" styleClass="btn btn-default"
+                                             action="#{companyBean.create(company)}">
+                            </h:commandButton>
+                        </div>
+                    </div>
+                </h:form>
+                <hr/>
+
+                <!--Update company-->
+                <h:form id="updateCompany" styleClass="form-horizontal">
+
+                    <div class="form-group">
+                        <h:outputLabel value="Company Name" styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:inputText id="ucompanyName" styleClass="form-control" value="#{company.companyName}"
+                                         required="true"
+                                         requiredMessage="Company name is required for update"/>
+                            <h:messages id="m4" for="ucompanyName" style="color:red"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel value="Company Location" styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:inputText id="ucompanyLocation" styleClass="form-control"
+                                         value="#{company.companyLocation}" required="true"
+                                         requiredMessage="Company location is required for update"/>
+                            <h:messages id="m5" for="ucompanyLocation" style="color:red"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel value="Company foundation year: " styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:inputText onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+                                         id="ucompanyFY" styleClass="form-control"
+                                         value="#{company.companyFoundationYear}"
+                                         required="true"
+                                         requiredMessage="Company foundation year is required for update"/>
+                            <h:messages id="m6" for="ucompanyFY" style="color:red"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel value="Company id: " styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:inputText styleClass="form-control" value="#{company.id}"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <h:commandButton styleClass="btn btn-default" value="Update"
+                                             action="#{companyBean.update(company.id, company)}">
+                                <!--<f:ajax execute="updateCompany" render="companyTable"/>-->
+                            </h:commandButton>
+                        </div>
+                    </div>
+                </h:form>
+                <hr/>
+
+                <!--Delete company:-->
+                <h:form id="deleteCompany" styleClass="form-horizontal">
+                    <div class="form-group">
+                        <h:outputLabel value="Choose name of company: " styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:selectOneMenu styleClass="form-control" value="#{company.id}">
+                                <f:selectItems value="#{companyBean.findAllCompanies()}" var="company"
+                                               itemValue="#{company.id}"
+                                               itemLabel="#{company.companyName}"/>
+                            </h:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <h:commandButton value="Delete" styleClass="btn btn-default"
+                                             action="#{companyBean.delete(company.id)}">
+                                <f:ajax execute="deleteCompany" render="companyTable"/>
+                            </h:commandButton>
+                        </div>
+                    </div>
+                </h:form>
+                <hr/>
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>

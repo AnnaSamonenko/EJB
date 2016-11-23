@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+    <title>Owners</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <h:outputStylesheet library="css" name="bootstrap.min.css"></h:outputStylesheet>
+</h:head>
+<body>
+<h:body>
+    <div class="container">
+        <div class="navbar navbar-inverse">
+            <div class="navbar-brand">
+                Owners
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h:dataTable id="ownerTable" class="table table-bordered table-striped"
+                             value="#{buyerBean.findAllBuyers()}" var="i" border="1">
+
+                    <h:column>
+                        <f:facet name="header"> id </f:facet>
+                        #{i.id}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header"> Name </f:facet>
+                        #{i.name}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header"> Surname </f:facet>
+                        #{i.surname}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header"> Address </f:facet>
+                        #{i.address}
+                    </h:column>
+
+                    <h:column id="stocks">
+                        <f:facet name="header"> Stocks </f:facet>
+                        <ui:repeat var="item" value="#{i.shares}"> #{item.id} - #{item.company.companyName}<br/>
+                        </ui:repeat>
+                    </h:column>
+
+                    <h:column id="bankAccount">
+                        <f:facet name="header"> Bank Account </f:facet>
+                        #{i.bankAccount.moneyOnBankAccount}
+                    </h:column>
+                </h:dataTable>
+                <hr/>
+                <!-- Create new owner -->
+                <h:form id="addNewOwner" styleClass="form-horizontal">
+                    <div class="form-group">
+                        <h:outputLabel value="First Name" styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:inputText id="inputOwner" styleClass="form-control" value="#{buyer.name}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel value="Last Name" styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:inputText id="inputSurname" styleClass="form-control" value="#{buyer.surname}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel value="Address" styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:inputText id="inputAddress" styleClass="form-control" value="#{buyer.address}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <h:commandButton value="Create" styleClass="btn btn-default"
+                                             action="#{buyerBean.create(buyer)}">
+                                <f:ajax execute="addNewOwner" render="ownerTable"/>
+                            </h:commandButton>
+                        </div>
+                    </div>
+                </h:form>
+                <hr/>
+
+                <!-- Update new owner-->
+                <h:form id="updateOwner" styleClass="form-horizontal">
+                    <div class="form-group">
+                        <h:outputLabel value="First Name" styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:inputText styleClass="form-control" value="#{buyer.name}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel value="Last Name" styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:inputText styleClass="form-control" value="#{buyer.surname}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel value="Address" styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:inputText styleClass="form-control" value="#{buyer.address}"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel value="Id of owner: " styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:inputText styleClass="form-control" value="#{buyer.id}"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <h:commandButton value="Update" styleClass="btn btn-default"
+                                             action="#{buyerBean.update(buyer.id, buyer)}">
+                                <f:ajax execute="updateOwner" render="ownerTable"/>
+                            </h:commandButton>
+                        </div>
+                    </div>
+                </h:form>
+                <hr/>
+
+                <!-- Delete owner-->
+                <h:form id="deleteOwner" styleClass="form-horizontal">
+                    <div class="form-group">
+                        <h:outputLabel value="Buyer name: " styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:selectOneMenu styleClass="form-control" value="#{buyer.id}">
+                                <f:selectItems value="#{buyerBean.findAllBuyers()}" var="buyer" itemValue="#{buyer.id}"
+                                               itemLabel="#{buyer.name} #{buyer.surname}"/>
+                            </h:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <h:commandButton value="Delete" styleClass="btn btn-default"
+                                             action="#{buyerBean.delete(buyer.id)}">
+                                <f:ajax execute="deleteOwner" render="ownerTable"/>
+                            </h:commandButton>
+                        </div>
+                    </div>
+                </h:form>
+                <hr/>
+
+                <!-- Add bank account-->
+                <h:form styleClass="form-horizontal">
+
+                    <div class="form-group">
+                        <h:outputLabel value="Buyer name: " styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:selectOneMenu styleClass="form-control" value="#{buyer.id}">
+                                <f:selectItems value="#{buyerBean.buyersWithoutBankAccount()}" var="buyer" itemValue="#{buyer.id}"
+                                               itemLabel="#{buyer.name} #{buyer.surname}"/>
+                            </h:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <h:commandButton value="Add bank account" styleClass="btn btn-default"
+                                             action="#{bankAccountBean.create(buyer.id)}"/>
+                        </div>
+                    </div>
+                </h:form>
+                <hr/>
+
+                <!-- Add money on bank account-->
+                <h:form styleClass="form-horizontal">
+
+                    <div class="form-group">
+                        <h:outputLabel value="Buyer name: " styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:selectOneMenu styleClass="form-control" value="#{buyer.id}">
+                                <f:selectItems value="#{buyerBean.findAllBuyers()}" var="buyer" itemValue="#{buyer.id}"
+                                               itemLabel="#{buyer.name} #{buyer.surname}"/>
+                            </h:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel value="Amount of money" styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:inputText styleClass="form-control" value="#{bankAccountBean.operationMoney}"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <h:commandButton value="Add money on bank account" styleClass="btn btn-default"
+                                             action="#{bankAccountBean.addMoney(buyer.id, bankAccountBean.operationMoney)}"/>
+                        </div>
+                    </div>
+                </h:form>
+                <hr/>
+
+                <!--Put share on exchange-->
+                <h:form styleClass="form-horizontal">
+                    <div class="form-group">
+                        <h:outputLabel value="ID of share: " styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:selectOneMenu styleClass="form-control" value="#{shareId}">
+                                <f:selectItems styleClass="form-control" value="#{shareBean.findAllShares()}" var="_sh"
+                                               itemValue="#{_sh.id}"
+                                               itemLabel="#{_sh.id} - #{_sh.company.companyName}"/>
+                            </h:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h:outputLabel value="Exchange name: " styleClass="control-label col-sm-2"/>
+                        <div class="col-sm-10">
+                            <h:selectOneMenu styleClass="form-control"
+                                             value="#{exchangeId}">
+                                <f:selectItems styleClass="form-control" value="#{exchangeBean.findAllExchanges()}"
+                                               var="_exchange"
+                                               itemValue="#{_exchange.id}"
+                                               itemLabel="#{_exchange.name}"/>
+                            </h:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <h:commandButton value="Put share on exchange" styleClass="btn btn-default"
+                                             action="#{exchangeBean.addShare(exchangeId, shareId)}"/>
+                        </div>
+                    </div>
+                </h:form>
+                <hr/>
+            </div>
+        </div>
+    </div>
+</h:body>
+</body>
+</html>
